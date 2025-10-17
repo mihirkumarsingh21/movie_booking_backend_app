@@ -85,6 +85,43 @@ export const getMovie = async (req, res) => {
     }
 }
 
+export const updateMovie = async (req, res) => {
+    try {
+        const {movieId} = req.params;
+        
+        if(!movieId || !isValidObjectId(movieId)) return res.status(400).json({
+            success: false,
+            message: "movie id are not present in your url Or invalid movie id." 
+        })
+
+        const isMovieExist = await Movie.findById(movieId);
+        if(!isMovieExist) return res.status(404).json({
+            succcess: false,
+            message: "movie not found : movie does not exist with this id."
+        })
+        const updatedMovie = await Movie.findByIdAndUpdate(movieId, req.body, {new: true});
+
+        if(!updatedMovie) return res.status(400).json({
+            succcess: false,
+            message: "failed to deleted movie."
+        })
+
+        return res.status(200).json({
+            success: true,
+            message: "movie updated successfully.",
+            updatedMovie: updatedMovie
+        })
+
+    } catch (error) {
+        console.log(`error while updating movie: ${error}`);
+        
+        res.status(500).json({
+            success: false,
+            message: `server error something went wrong: ${error}`
+        })
+        return;
+    }
+}
 
 export const deleteMovie = async (req, res) => {
     try {
@@ -92,6 +129,13 @@ export const deleteMovie = async (req, res) => {
         if(!movieId || !isValidObjectId(movieId)) return res.status(400).json({
             success: false,
             message: "movie id are not present in your url Or invalid movie id." 
+        })
+
+
+         const isMovieExist = await Movie.findById(movieId);
+        if(!isMovieExist) return res.status(404).json({
+            succcess: false,
+            message: "movie not found : movie does not exist with this id."
         })
 
         const deletedMovie = await Movie.findByIdAndDelete(movieId);
