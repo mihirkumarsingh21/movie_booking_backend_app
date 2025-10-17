@@ -20,9 +20,6 @@ app.use("/mba/api/v1/movies", movieRoute);
 
 
 
-
-
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
     console.log(`server is running at port -> http://localhost:${PORT}`);
